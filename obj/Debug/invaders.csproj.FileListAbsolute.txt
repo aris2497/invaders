@@ -1,0 +1,10 @@
+G:\invaders\bin\Debug\invaders.exe.config
+G:\invaders\bin\Debug\invaders.exe
+G:\invaders\bin\Debug\invaders.pdb
+G:\invaders\obj\Debug\invaders.csprojAssemblyReference.cache
+G:\invaders\obj\Debug\invaders.Form1.resources
+G:\invaders\obj\Debug\invaders.Properties.Resources.resources
+G:\invaders\obj\Debug\invaders.csproj.GenerateResource.cache
+G:\invaders\obj\Debug\invaders.csproj.CoreCompileInputs.cache
+G:\invaders\obj\Debug\invaders.exe
+G:\invaders\obj\Debug\invaders.pdb
