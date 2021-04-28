@@ -14,6 +14,7 @@ namespace invaders
             public Point point;
             public Pen pen;
 
+
             public Star(Point point, Pen pen)
             {
 
@@ -25,14 +26,20 @@ namespace invaders
         private List<Star> Stars_list;
         private int x;
         private int y;
-        private Pen MyPen = new Pen(Color.Black);
+        private Pen MyPen = new Pen(Color.White);
+        private Size size = new Size(5, 5);
+        private Random rand = new Random();
+        private int random;
+        private SolidBrush brush = new SolidBrush(Color.White);
+        
 
         public Stars(Rectangle rect, Random rand) 
         {
             Stars_list = new List<Star>();
-            for (int i = 0; i < 300; i++) {
-                x = rand.Next(100);
-                y = rand.Next(100);
+            for (int i = 0; i < 300; i++) 
+            {
+                x = rand.Next(rect.Width);
+                y = rand.Next(rect.Height);
                 Stars_list.Add(new Star(new Point(x, y), MyPen));
             }
         }
@@ -40,14 +47,19 @@ namespace invaders
         public void Draw(Graphics g) 
         {
             for (int i = 0; i < Stars_list.Count; i++) {
-                Console.WriteLine(Stars_list[i].point);
-                g.DrawLine(Stars_list[i].pen, Stars_list[i].point, Stars_list[i].point);
+                
+                g.FillEllipse(brush, new Rectangle(Stars_list[i].point, RandomSize()));
                 
             }
-            
-            //should draw all the stars from the list
+            brush.Dispose();
         }
         public void Twinkle(Random random) { }
+
+        public Size RandomSize() 
+        {
+            random = rand.Next(0, 4);
+            return new Size(random, random);
+        }
 
     }
 

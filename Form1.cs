@@ -20,10 +20,11 @@ namespace invaders
         public Form1()
         {
             InitializeComponent();
-            rect = new Rectangle(this.Location, new Size(Screen.width, Screen.Height));
+            rect = Screen.GetBounds(this);
             rand = new Random();
             stars = new Stars(rect, rand);
             g = this.CreateGraphics();
+            this.BackColor = Color.Black;
            
         }
 
