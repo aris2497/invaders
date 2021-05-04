@@ -9,32 +9,20 @@ namespace invaders
 {
     class Stars
     {
-        private struct Star
-        {
-            public Point point;
-            public Pen pen;
-
-
-            public Star(Point point, Pen pen)
-            {
-
-                this.point = point;
-                this.pen = pen;
-            }
-        }
 
         private List<Star> Stars_list;
         private int x;
         private int y;
         private Pen MyPen = new Pen(Color.White);
-        private Size size = new Size(5, 5);
-        private Random rand = new Random();
-        private int random;
-        private SolidBrush brush = new SolidBrush(Color.White);
+        private Size size = new Size(1, 1);
+        private Random rand;
+        private Rectangle rect;
         
-
         public Stars(Rectangle rect, Random rand) 
         {
+            this.rand = rand;
+            this.rect = rect;
+            
             Stars_list = new List<Star>();
             for (int i = 0; i < 300; i++) 
             {
@@ -46,21 +34,39 @@ namespace invaders
 
         public void Draw(Graphics g) 
         {
-            for (int i = 0; i < Stars_list.Count; i++) {
-                
-                g.FillEllipse(brush, new Rectangle(Stars_list[i].point, RandomSize()));
-                
+            foreach(Star star in Stars_list)
+            {
+                g.DrawRectangle(MyPen, new Rectangle(star.point, size));
             }
-            brush.Dispose();
         }
-        public void Twinkle(Random random) { }
 
-        public Size RandomSize() 
+        public void Twinkle() 
         {
-            random = rand.Next(0, 4);
-            return new Size(random, random);
+            List<Star> starsToRemove = new List<Star>();
+            for (int i = 0; i < 5; i++) {
+                starsToRemove.Add(Stars_list[rand.Next(Stars_list.Count)]);
+            }
+
+            foreach (Star toRemove in starsToRemove) {
+                Stars_list.Remove(toRemove);
+            }
+
+            for (int i = 0; i < 5; i++) {
+                Stars_list.Add(new Star(new Point(rand.Next(rect.Width), rand.Next(rect.Height)), MyPen));
+            }
+
         }
 
-    }
+        private struct Star
+        {
+            public Point point;
+            public Pen pen;
 
+            public Star(Point point, Pen pen)
+            {
+                this.point = point;
+                this.pen = pen;
+            }
+        }
+    }
 }
