@@ -27,7 +27,7 @@ namespace invaders
         {
             get
             {
-                return new Rectangle(location, image.Size);
+                return new Rectangle(Location, image.Size);
             }
         }
         public int Score { get; private set; }
@@ -37,6 +37,20 @@ namespace invaders
             this.Location = location;
             this.Score = score;
             image = InvaderImage(0);
+        }
+
+        public void Move(Direction direction) {
+            //moves the ship in the specific direction
+        }
+
+        public void Darw(Graphics g, int animationCell) {
+            //draws the image of the ship, using the correct animationCell
+        }
+
+        private Bitmap InvaderImage(int animationCell)  {
+            Bitmap bitmap; 
+            //return the right bitmap for the specified cell
+            return bitmap;
         }
 
     }
