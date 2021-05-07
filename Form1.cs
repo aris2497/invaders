@@ -29,6 +29,7 @@ namespace invaders
             game = new Game(boundaries);
             
             animationTimer.Start();
+            gameTimer.Start();
         }
 
         private void Form1_Load(object sender, EventArgs e)
