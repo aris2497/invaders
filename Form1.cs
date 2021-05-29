@@ -17,6 +17,7 @@ namespace invaders
         public Random rand;
         List<Keys> keysPressed = new List<Keys>();
         bool gameOver = false;
+        private int animationCell = 0;
 
         public Form1()
         {
@@ -42,11 +43,18 @@ namespace invaders
         {
             game.Twinkle(); //background stars twinkling
             Refresh(); //repainting the background
+
+            animationCell++;
+            if (animationCell > 6) 
+            {
+                animationCell = 0;
+            }
+           
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            game.Draw(e.Graphics); //drawing background stars
+            game.Draw(e.Graphics, animationCell); //drawing background stars
             if (gameOver){
                 //writing the game is over in the middle of the screen
                 //hiting S to start again

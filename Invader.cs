@@ -11,6 +11,7 @@ namespace invaders
     {
         private const int HorizontalInterval = 10;
         private const int VerticalInterval = 40; //constants determines how many pixels invader moves
+        
         public enum Type
         {
             Bug,
@@ -22,9 +23,8 @@ namespace invaders
 
         private Bitmap image;
 
-        private List<Invader> invaders;
         public Point Location { get; private set; }
-        public Type InvaderType { get; private set; }
+        public ShipType InvaderType { get; private set; }
         public Rectangle Area
         {
             get
@@ -32,62 +32,182 @@ namespace invaders
                 return new Rectangle(Location, image.Size);
             }
         }
+
         public int Score { get; private set; }
         public Type Star { get; private set; }
 
-        public Invader(Type invaderType, Point location, int score) {
+        public Invader(ShipType invaderType, Point location, int score) {
             this.InvaderType = invaderType;
             this.Location = location;
             this.Score = score;
             this.image = InvaderImage(0);
         }
 
-        public void Move(Direction direction) {
+        public void Move(Direction direction, Rectangle boundaries) 
+        {
+            switch (direction) 
+            {
+                case Direction.Left:
+                    MoveLeft(boundaries);
+                    break;
+                case Direction.Right:
+                    MoveRight(boundaries);
+                    break;
+                case Direction.Down:
+                    MoveDown();
+                    break;
+
+            }
+        }
+
+        public void MoveRight(Rectangle boundaries) {
+            this.Location = new Point(Location.X + HorizontalInterval, Location.Y);
+            //moves the ship in the specific direction
+        }
+        public void MoveLeft(Rectangle boundaries)
+        {
+            this.Location = new Point(Location.X - HorizontalInterval, Location.Y);
             //moves the ship in the specific direction
         }
 
+        public void MoveDown() 
+        {
+            this.Location = new Point(Location.X, Location.Y + 100);
+        }
+
         public void Draw(Graphics g, int animationCell) {
-            g.DrawImage(InvaderImage(animationCell), this.Location);
+             g.DrawImage(InvaderImage(animationCell), this.Location);
+            
             //draws the image of the ship, using the correct animationCell
         }
         
-        private Bitmap InvaderImage(int animationCell)  {
+        private Bitmap InvaderImage(int animationCell)  
+        {
+            
+            switch (InvaderType)
+            {
+                case ShipType.Bug:
+                    return BugAnimation(animationCell);
+                case ShipType.Saucer:
+                    return SaucerAnimation(animationCell);
+                case ShipType.Satallite:
+                    return SatalliteAnimation(animationCell);
+                case ShipType.Star:
+                    return StarAnimation(animationCell);
+                case ShipType.Spaceship:
+                    return SpaceshipAnimation(animationCell);
+                default:
+                    return StarAnimation(animationCell);
+            }
 
-            switch (animationCell) 
+        }
+
+        private Bitmap StarAnimation(int animationCell)
+        {
+            switch (animationCell)
             {
                 case 0:
                     return Properties.Resources.star1;
                 case 1:
-                    return Properties.Resources.star2;
+                    return Properties.Resources.star1;
                 case 2:
-                    return Properties.Resources.star3;
+                    return Properties.Resources.star2;
                 case 3:
-                    return Properties.Resources.star4;
+                    return Properties.Resources.star2;
+                case 4:
+                    return Properties.Resources.star3;
+                case 5:
+                    return Properties.Resources.star3;
+
                 default:
                     return Properties.Resources.star1;
             }
             //return the right bitmap for the specified cell
         }
-
-        private void CreateColumn(int x) 
+        private Bitmap BugAnimation(int animationCell) 
         {
-            invaders.Add(new Invader(Type.Star, new Point(100 - x, 100), 10));
-            invaders.Add(new Invader(Type.Spaceship, new Point(100 - x, 90), 20));
-            invaders.Add(new Invader(Type.Saucer, new Point(100 - x, 80), 30));
-            invaders.Add(new Invader(Type.Satallite, new Point(100 - x , 70), 40));
-            invaders.Add(new Invader(Type.Bug, new Point(100 - x, 60), 50));
+            switch (animationCell)
+            {
+                case 0:
+                    return Properties.Resources.bug1;
+                case 1:
+                    return Properties.Resources.bug1;
+                case 2:
+                    return Properties.Resources.bug2;
+                case 3:
+                    return Properties.Resources.bug2;
+                case 4:
+                    return Properties.Resources.bug3;
+                case 5:
+                    return Properties.Resources.bug3;
 
-        }
-
-        private void NextWave() 
-        {
-            invaders = new List<Invader>();
-            for (int i = 0; i <= 6; i++) {
-                CreateColumn(10 * i);
+                default:
+                    return Properties.Resources.bug1;
             }
-
         }
-        
+        private Bitmap SaucerAnimation(int animationCell) 
+        {
+            switch (animationCell)
+            {
+                case 0:
+                    return Properties.Resources.flyingsaucer1;
+                case 1:
+                    return Properties.Resources.flyingsaucer1;
+                case 2:
+                    return Properties.Resources.flyingsaucer2;
+                case 3:
+                    return Properties.Resources.flyingsaucer2;
+                case 4:
+                    return Properties.Resources.flyingsaucer3;
+                case 5:
+                    return Properties.Resources.flyingsaucer3;
+
+                default:
+                    return Properties.Resources.flyingsaucer1;
+            }
+        }
+        private Bitmap SatalliteAnimation(int animationCell) 
+        {
+            switch (animationCell)
+            {
+                case 0:
+                    return Properties.Resources.satellite1;
+                case 1:
+                    return Properties.Resources.satellite1;
+                case 2:
+                    return Properties.Resources.satellite2;
+                case 3:
+                    return Properties.Resources.satellite2;
+                case 4:
+                    return Properties.Resources.satellite3;
+                case 5:
+                    return Properties.Resources.satellite3;
+
+                default:
+                    return Properties.Resources.satellite1;
+            }
+        }
+        private Bitmap SpaceshipAnimation(int animationCell) 
+        {
+            switch (animationCell)
+            {
+                case 0:
+                    return Properties.Resources.spaceship1;
+                case 1:
+                    return Properties.Resources.spaceship1;
+                case 2:
+                    return Properties.Resources.spaceship2;
+                case 3:
+                    return Properties.Resources.spaceship2;
+                case 4:
+                    return Properties.Resources.spaceship3;
+                case 5:
+                    return Properties.Resources.spaceship3;
+
+                default:
+                    return Properties.Resources.spaceship1;
+            }
+        }
 
     }
 }
