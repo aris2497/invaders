@@ -9,8 +9,8 @@ namespace invaders
 {
     class Invader
     {
-        private const int HorizontalInterval = 10;
-        private const int VerticalInterval = 40; //constants determines how many pixels invader moves
+        private const int HorizontalInterval = 5;
+        private const int VerticalInterval = 50; //constants determines how many pixels invader moves
         
         public enum Type
         {
@@ -29,18 +29,19 @@ namespace invaders
         {
             get
             {
-                return new Rectangle(Location, image.Size);
+                return new Rectangle(Location, Image.Size);
             }
         }
 
         public int Score { get; private set; }
         public Type Star { get; private set; }
+        public Bitmap Image { get => image; set => image = value; }
 
         public Invader(ShipType invaderType, Point location, int score) {
             this.InvaderType = invaderType;
             this.Location = location;
             this.Score = score;
-            this.image = InvaderImage(0);
+            this.Image = InvaderImage(0);
         }
 
         public void Move(Direction direction, Rectangle boundaries) 
@@ -72,7 +73,8 @@ namespace invaders
 
         public void MoveDown() 
         {
-            this.Location = new Point(Location.X, Location.Y + 100);
+            this.Location = new Point(Location.X, Location.Y + VerticalInterval);
+            //moves the ship in the specific direction
         }
 
         public void Draw(Graphics g, int animationCell) {

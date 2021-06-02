@@ -13,14 +13,16 @@ namespace invaders
         private Stars stars;
         private Rectangle boundaries;
 
-        private Direction invaderDirection;
         private List<Invader> invaders;
 
         private PlayerShip playerShip;
-        //private List<Shot> playerShot;
-        //private List<Shot> invaderShots;
+        private List<Shot> playerShots;
+        private List<Shot> playerShotsToRemove;
         private Direction direction;
         private bool turn = false;
+        private List<Invader> invadersToRemove;
+
+        private int level = 1;
 
         public Game(Rectangle boundaries) 
         {
@@ -28,9 +30,11 @@ namespace invaders
             stars = new Stars(boundaries, rand);
             NextWave();
             direction = Direction.Right;
-           
-            playerShip = new PlayerShip(new Point(boundaries.Height - 150, boundaries.Width/2 - 50));
+            playerShots = new List<Shot>();
+            playerShotsToRemove = new List<Shot>();
+            invadersToRemove = new List<Invader>();
 
+            playerShip = new PlayerShip(new Point(boundaries.Height - 150, boundaries.Width/2 - 50));
         }
     
 
@@ -42,8 +46,11 @@ namespace invaders
             {
                 invader.Draw(g, animationCell);
             }
+            foreach (Shot shot in playerShots) 
+            {
+                shot.Draw(g);
+            }
         }
-
 
         public void Twinkle() 
         {
@@ -57,50 +64,22 @@ namespace invaders
 
         public void FireShot() 
         {
-
+            if (playerShots.Count <= 2)
+            {
+                playerShots.Add(new Shot(playerShip.Area));
+            }
+            
         }
         
         public void Go() 
         {
-            /*
-                foreach (Invader invader in invaders) 
-                {
-                    if (!turn)
-                    {
-                        invader.MoveRight(direction, boundaries);
-                        if (invader.Location.X > (boundaries.Width - 200))
-                        {
-                            turn = true;
-                            foreach(Invader inv in invaders) 
-                            { 
-                                inv.MoveDown(); 
-                            }
-                            
-                        }
-                    }
-                    else 
-                    {
-                        invader.MoveLeft(boundaries);
-                        if (invader.Location.X < 100)
-                        {
-                            turn = false;
-                            foreach (Invader inv in invaders)
-                            {
-                                inv.MoveDown();
-                            }
-                        }
-                    }
-
-                }
-            */
-
             foreach (Invader invader in invaders) 
             {
                 if (!turn)
                 {
                     direction = Direction.Right;
                     invader.Move(direction, boundaries);
-                    if (invader.Location.X > (boundaries.Width - 200))
+                    if (invader.Location.X > (boundaries.Width - 50))
                     {
                         direction = Direction.Down;
                         foreach (Invader inv in invaders)
@@ -115,9 +94,10 @@ namespace invaders
                 {
                     direction = Direction.Left;
                     invader.Move(direction, boundaries);
-                    if (invader.Location.X < 100)
+                    if (invader.Location.X < 50)
                     {
                         direction = Direction.Down;
+
                         foreach (Invader inv in invaders)
                         {
                             inv.Move(direction, boundaries);
@@ -126,20 +106,84 @@ namespace invaders
                         turn = false;
                     }
                 }
-                
             }
-            
+
+            foreach (Shot shot in playerShots) 
+            {
+                if (shot.Location.Y > 100)
+                {
+                    shot.Move();
+                }
+                else 
+                {
+                    playerShotsToRemove.Add(shot);
+                }
+            }
+
+           
+
+            foreach (Shot shot in playerShots)
+            {
+                if (shot.Location.Y > 100)
+                {
+                    shot.Move();
+                }
+                else
+                {
+                    playerShotsToRemove.Add(shot);
+                }
+            }
+
+            foreach (Shot shot in playerShots)
+            {
+                foreach (Invader invader in invaders)
+                {
+                    if (DetectCollision(shot, invader))
+                    {
+                        playerShotsToRemove.Add(shot);
+                        invadersToRemove.Add(invader);
+                    }
+                }
+            }
+
+            foreach (Shot shotToRemove in playerShotsToRemove)
+            {
+                playerShots.Remove(shotToRemove);
+            }
+            foreach (Invader invaderToRemove in invadersToRemove)
+            {
+                invaders.Remove(invaderToRemove);
+            }
+
+            if (!invaders.Any()) 
+            {
+                LevelUp();
+                NextWave();
+            }
 
         }
 
-        private void CreateColumn(int x)
+        private void LevelUp()
         {
-            invaders.Add(new Invader(ShipType.Star, new Point(50 + x, 450), 10));
-            invaders.Add(new Invader(ShipType.Spaceship, new Point(50 + x, 350), 20));
-            invaders.Add(new Invader(ShipType.Saucer, new Point(50 + x, 250), 30));
-            invaders.Add(new Invader(ShipType.Satallite, new Point(50 + x, 150), 40));
-            invaders.Add(new Invader(ShipType.Bug, new Point(50 + x, 50), 50));
+            level++;
 
+        }
+
+        public bool DetectCollision(Shot shot, Invader invader)
+        {
+            Rectangle ctrl1Rect = new Rectangle(shot.Location, shot.Size);
+            Rectangle ctrl2Rect = new Rectangle(invader.Location, invader.Image.Size);
+            
+            return ctrl1Rect.IntersectsWith(ctrl2Rect);
+        }
+
+        private void CreateColumn(int distance)
+        {
+            invaders.Add(new Invader(ShipType.Star, new Point(50 + distance, 450), 10));
+            invaders.Add(new Invader(ShipType.Spaceship, new Point(50 + distance, 350), 20));
+            invaders.Add(new Invader(ShipType.Saucer, new Point(50 + distance, 250), 30));
+            invaders.Add(new Invader(ShipType.Satallite, new Point(50 + distance, 150), 40));
+            invaders.Add(new Invader(ShipType.Bug, new Point(50 + distance, 50), 50));
         }
 
         private void NextWave()

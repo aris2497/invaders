@@ -17,6 +17,7 @@ namespace invaders
         private Size size = new Size(1, 1);
         private Random rand;
         private Rectangle rect;
+        private List<Shot> playerShots;
         
         public Stars(Rectangle rect, Random rand) 
         {
@@ -68,5 +69,6 @@ namespace invaders
                 this.pen = pen;
             }
         }
+
     }
 }

@@ -16,8 +16,9 @@ namespace invaders
         private Game game;
         public Random rand;
         List<Keys> keysPressed = new List<Keys>();
-        bool gameOver = false;
         private int animationCell = 0;
+
+        private bool gameOver = false;
 
         public Form1()
         {
@@ -56,6 +57,7 @@ namespace invaders
         {
             game.Draw(e.Graphics, animationCell); //drawing background stars
             if (gameOver){
+
                 //writing the game is over in the middle of the screen
                 //hiting S to start again
             }
@@ -89,18 +91,25 @@ namespace invaders
 
         private void gameTimer_Tick(object sender, EventArgs e)
         {
-            if (keysPressed.Count() >= 1) {
-                //zero is the most recent key pressed
-                switch (keysPressed[0]) {
-                    case Keys.Left:
-                        game.MovePlayer(Direction.Left); //moving player to the left
-                        break;
-                    case Keys.Right:
-                        game.MovePlayer(Direction.Right); //moving player to the right
-                        break;
+            if (!gameOver) 
+            {
+                if (keysPressed.Count() >= 1)
+                {
+                    //zero is the most recent key pressed
+                    switch (keysPressed[0])
+                    {
+                        case Keys.Left:
+                            game.MovePlayer(Direction.Left); //moving player to the left
+                            break;
+                        case Keys.Right:
+                            game.MovePlayer(Direction.Right); //moving player to the right
+                            break;
+
+                    }
                 }
+                game.Go(); //to let the game continue
             }
-            game.Go(); //to let the game continue
+          
         }
     }
 }
