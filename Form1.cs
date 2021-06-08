@@ -32,6 +32,8 @@ namespace invaders
             
             animationTimer.Start();
             gameTimer.Start();
+
+            score_label.Text = "Score: " + game.score.ToString();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -50,15 +52,15 @@ namespace invaders
             {
                 animationCell = 0;
             }
-           
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
             game.Draw(e.Graphics, animationCell); //drawing background stars
             if (gameOver){
-
+                gameOver_label.Visible = true;
                 //writing the game is over in the middle of the screen
+
                 //hiting S to start again
             }
             
@@ -67,19 +69,24 @@ namespace invaders
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Q) //if want to Quit
-                Application.Exit(); 
+                Application.Exit();
 
             if (gameOver) 
-                if(e.KeyCode == Keys.S) //to restart the game
+            {
+
+                if (e.KeyCode == Keys.S) //to restart the game
                 {
+                    Application.Restart();
                     //to reset the game and restart the timers
 
                     return;
                 }
-                if (e.KeyCode == Keys.Space) //spacebar fires a shot 
-                    game.FireShot();
-                if (keysPressed.Contains(e.KeyCode)) //if the list already contains the key - remove
-                    keysPressed.Remove(e.KeyCode);
+            }
+                
+            if (e.KeyCode == Keys.Space) //spacebar fires a shot 
+                game.FireShot();
+            if (keysPressed.Contains(e.KeyCode)) //if the list already contains the key - remove
+                keysPressed.Remove(e.KeyCode);
                 keysPressed.Add(e.KeyCode);
         }
 

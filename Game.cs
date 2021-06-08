@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace invaders
 {
@@ -12,6 +13,7 @@ namespace invaders
         private Random rand = new Random();
         private Stars stars;
         private Rectangle boundaries;
+        public int score { get; private set; } = 0;
 
         private List<Invader> invaders;
 
@@ -23,6 +25,7 @@ namespace invaders
         private List<Invader> invadersToRemove;
 
         private int level = 1;
+
 
         public Game(Rectangle boundaries) 
         {
@@ -120,8 +123,6 @@ namespace invaders
                 }
             }
 
-           
-
             foreach (Shot shot in playerShots)
             {
                 if (shot.Location.Y > 100)
@@ -142,6 +143,7 @@ namespace invaders
                     {
                         playerShotsToRemove.Add(shot);
                         invadersToRemove.Add(invader);
+                        AddScore(invader);
                     }
                 }
             }
@@ -150,6 +152,7 @@ namespace invaders
             {
                 playerShots.Remove(shotToRemove);
             }
+
             foreach (Invader invaderToRemove in invadersToRemove)
             {
                 invaders.Remove(invaderToRemove);
@@ -163,10 +166,15 @@ namespace invaders
 
         }
 
+        private void AddScore(Invader invader)
+        {
+            score += invader.Score;
+            //score_label.Text = "Score: " + score;
+        }
+
         private void LevelUp()
         {
             level++;
-
         }
 
         public bool DetectCollision(Shot shot, Invader invader)
